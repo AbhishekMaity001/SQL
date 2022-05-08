@@ -318,6 +318,7 @@ GROUP BY DEV_IN
 SELECT NAME, COUNT(TITLE) FROM SOFTWARE
 GROUP BY NAME
 
+----------------------------------------------------------------------------------------------------------------
 SELECT EXTRACT(YEAR FROM AGE(NOW()))
 select INTERVAL '1 YEAR'
 
@@ -330,4 +331,153 @@ SELECT NAME, COUNT(*) from STUDIES
 GROUP BY NAME
 HAVING COUNT(*)=1;
 
-SELECT DISTINCT(NAME) FROM SOFTWARE
+----------------------------------------------------------------------------------------------------------------
+
+-- Assignment 2
+DROP TABLE IF EXISTS PRODUCT;
+DROP TABLE IF EXISTS STORE;
+DROP TABLE IF EXISTS SALES;
+
+--PRODUCT TABLE
+CREATE TABLE product (
+product_code varchar(20) NOT NULL,
+product_desc varchar(50),
+brand varchar(20) NOT NULL,
+shelf_life_days smallint,
+sku_size varchar(10),
+PRIMARY KEY (product_code)
+);
+
+
+--STORE TABLE
+CREATE TABLE store(
+retailer_code varchar(100) NOT NULL UNIQUE,
+distributor_code varchar(50) NOT NULL UNIQUE,
+state varchar(100),
+distributor_name varchar(100) NOT NULL,
+retailer_name varchar(100) NOT NULL,
+dsr_id varchar(100) NOT NULL,
+dsr_name varchar(100) NOT NULL,
+beat_id varchar(100) NOT NULL,
+beat_name varchar(100) NOT NULL,
+channel varchar(100) NOT NULL,
+city varchar(100) NOT NULL,
+avg_bpm DECIMAL(22,4),
+PRIMARY KEY (retailer_code, distributor_code)
+);
+
+--SALES TABLE
+CREATE TABLE sales(
+sales_date DATE NOT NULL PRIMARY KEY,
+retailer_code varchar(100) NOT NULL,
+distributor_code varchar(50) NOT NULL,
+product_code varchar(20) NOT NULL,
+dsr_id varchar(20),
+sales_qty decimal(22,4),
+tax1_amt decimal(22,4),
+tax2_amt decimal(22,4),
+brand varchar(20),
+net_weight decimal(22,4),
+channel varchar(100),
+CONSTRAINT FK_PRODUCT_CODE FOREIGN KEY(product_code) REFERENCES product (product_code),
+CONSTRAINT FK_RETAILER_CODE FOREIGN KEY(retailer_code) REFERENCES store (retailer_code),
+CONSTRAINT FK_DISTRIBUTOR_CODE FOREIGN KEY(distributor_code) REFERENCES store (distributor_code)
+);
+
+INSERT INTO PRODUCT(product_code, product_desc, brand, shelf_life_days, sku_size) VALUES('CODE-1', 'DESC1', 'CLINIC PLUS', 7, 2);
+INSERT INTO PRODUCT(product_code, product_desc, brand, shelf_life_days, sku_size) VALUES('CODE-2', 'DESC2', 'LIFEBOY', 5, 33);
+INSERT INTO PRODUCT(product_code, product_desc, brand, shelf_life_days, sku_size) VALUES('CODE-3', 'DESC3', 'DETTOL', 10, 20);
+INSERT INTO PRODUCT(product_code, product_desc, brand, shelf_life_days, sku_size) VALUES('CODE-4', 'DESC4', 'SUNSILK', 2, 21);
+INSERT INTO PRODUCT(product_code, product_desc, brand, shelf_life_days, sku_size) VALUES('CODE-5', 'DESC5', 'CINTHOL', 6, 45);
+INSERT INTO PRODUCT(product_code, product_desc, brand, shelf_life_days, sku_size) VALUES('CODE-6', 'DESC6', 'LOREAL', 8, 55);
+INSERT INTO PRODUCT(product_code, product_desc, brand, shelf_life_days, sku_size) VALUES('CODE-7', 'DESC7', 'PANTENE', 9, 63);
+select * from product;
+
+
+INSERT INTO STORE(retailer_code, distributor_code, state, distributor_name, retailer_name, dsr_id, dsr_name, beat_id, beat_name, channel, city, avg_bpm) 
+	    VALUES('RET-CODE-1', 'DIST-CODE-1', 'JAMMU', 'JOHNNIE WALKER', 'RETAILER-1', 'DSR-1','DSRNAME-1', 'BEAT-1', 'BEATNAME-1', 'CHANNEL-1', 'Srinagar', 52);
+INSERT INTO STORE(retailer_code, distributor_code, state, distributor_name, retailer_name, dsr_id, dsr_name, beat_id, beat_name, channel, city, avg_bpm) 
+	    VALUES('RET-CODE-2', 'DIST-CODE-2', 'ANDHRA PRADESH', 'RED LABEL', 'RETAILER-2', 'DSR-2', 'DSRNAME-2', 'BEAT-2', 'BEATNAME-2', 'CHANNEL-2', 'Hyderabad', 40);
+INSERT INTO STORE(retailer_code, distributor_code, state, distributor_name, retailer_name, dsr_id, dsr_name, beat_id, beat_name, channel, city, avg_bpm) 
+	    VALUES('RET-CODE-3', 'DIST-CODE-3', 'KARNATAKA', 'TEACHERS', 'RETAILER-3', 'DSR-3', 'DSRNAME-3', 'BEAT-3', 'BEATNAME-3', 'CHANNEL-3', 'Bangalore', 35);
+INSERT INTO STORE(retailer_code, distributor_code, state, distributor_name, retailer_name, dsr_id, dsr_name, beat_id, beat_name, channel, city, avg_bpm) 
+	    VALUES('RET-CODE-4', 'DIST-CODE-4', 'JHARKHAND', 'WILLIAM LAWSONS', 'RETAILER-4', 'DSR-4', 'DSRNAME-4', 'BEAT-4', 'BEATNAME-4', 'CHANNEL-4', 'Jamshedpur', 110);
+INSERT INTO STORE(retailer_code, distributor_code, state, distributor_name, retailer_name, dsr_id, dsr_name, beat_id, beat_name, channel, city, avg_bpm)
+	    VALUES('RET-CODE-5', 'DIST-CODE-5', 'DELHI', 'BACARDI LIMON', 'RETAILER-5', 'DSR-5', 'DSRNAME-5', 'BEAT-5', 'BEATNAME-5', 'CHANNEL-5', 'Noida', 120);
+INSERT INTO STORE(retailer_code, distributor_code, state, distributor_name, retailer_name, dsr_id, dsr_name, beat_id, beat_name, channel, city, avg_bpm) 
+	    VALUES('RET-CODE-6', 'DIST-CODE-6', 'KERALA', 'SIGNATURE', 'RETAILER-6', 'DSR-6', 'DSRNAME-6', 'BEAT-6', 'BEATNAME-6', 'CHANNEL-6', 'Kochi', 11);
+INSERT INTO STORE(retailer_code, distributor_code, state, distributor_name, retailer_name, dsr_id, dsr_name, beat_id, beat_name, channel, city, avg_bpm) 
+	    VALUES('RET-CODE-7', 'DIST-CODE-7', 'JHARKHAND', 'SIGNATURE', 'RETAILER-7', 'DSR-7', 'DSRNAME-7', 'BEAT-7', 'BEATNAME-7', 'CHANNEL-7', 'Jamshedpur', 112);
+select * from store
+
+
+INSERT INTO SALES(sales_date, retailer_code, distributor_code, product_code, dsr_id, sales_qty, tax1_amt, tax2_amt, brand, net_weight, channel) 
+		  VALUES('30-APR-2022', 'RET-CODE-5', 'DIST-CODE-4', 'CODE-1', 'DSR-1', 50, 9685, 552, 'CINTHOL', 50, 'AIR');
+INSERT INTO SALES(sales_date, retailer_code, distributor_code, product_code, dsr_id, sales_qty, tax1_amt, tax2_amt, brand, net_weight, channel) 
+		  VALUES('01-APR-2022', 'RET-CODE-4', 'DIST-CODE-4', 'CODE-2', 'DSR-4', 40, 5698, 745, 'CLINIC PLUS', 50, 'LAND');
+INSERT INTO SALES(sales_date, retailer_code, distributor_code, product_code, dsr_id, sales_qty, tax1_amt, tax2_amt, brand, net_weight, channel) 
+		  VALUES('07-MAR-2022', 'RET-CODE-3', 'DIST-CODE-3', 'CODE-3', 'DSR-2', 100, 8475, 123, 'BEER SHAMPOO', 50, 'WATER');
+INSERT INTO SALES(sales_date, retailer_code, distributor_code, product_code, dsr_id, sales_qty, tax1_amt, tax2_amt, brand, net_weight, channel) 
+		  VALUES('07-MAY-2022', 'RET-CODE-2', 'DIST-CODE-1', 'CODE-4', 'DSR-3', 55, 3698, 321, 'PANTENE', 50, 'AIR');
+INSERT INTO SALES(sales_date, retailer_code, distributor_code, product_code, dsr_id, sales_qty, tax1_amt, tax2_amt, brand, net_weight, channel) 
+		  VALUES('03-JAN-2022', 'RET-CODE-1', 'DIST-CODE-2', 'CODE-5', 'DSR-1', 150, 1458, 465, 'TATA', 50, 'GROUND');
+
+INSERT INTO SALES(sales_date, retailer_code, distributor_code, product_code, dsr_id, sales_qty, tax1_amt, tax2_amt, brand, net_weight, channel) 
+		  VALUES('09-JAN-2022', 'RET-CODE-1', 'DIST-CODE-2', 'CODE-5', 'DSR-1', 150, 1458, 465, 'PARACHUTE', 50, 'GROUND');
+INSERT INTO SALES(sales_date, retailer_code, distributor_code, product_code, dsr_id, sales_qty, tax1_amt, tax2_amt, brand, net_weight, channel) 
+		  VALUES('22-FEB-2022', 'RET-CODE-1', 'DIST-CODE-2', 'CODE-5', 'DSR-1', 150, 1458, 465, 'PARACHUTE', 40, 'GROUND');
+INSERT INTO SALES(sales_date, retailer_code, distributor_code, product_code, dsr_id, sales_qty, tax1_amt, tax2_amt, brand, net_weight, channel) 
+		  VALUES('08-MAR-2022', 'RET-CODE-1', 'DIST-CODE-2', 'CODE-5', 'DSR-1', 150, 1458, 465, 'PARACHUTE', 66, 'GROUND');
+INSERT INTO SALES(sales_date, retailer_code, distributor_code, product_code, dsr_id, sales_qty, tax1_amt, tax2_amt, brand, net_weight, channel) 
+		  VALUES('03-APR-2022', 'RET-CODE-1', 'DIST-CODE-2', 'CODE-5', 'DSR-1', 150, 1458, 465, 'PARACHUTE', 74, 'GROUND');
+INSERT INTO SALES(sales_date, retailer_code, distributor_code, product_code, dsr_id, sales_qty, tax1_amt, tax2_amt, brand, net_weight, channel) 
+		  VALUES('03-MAY-2022', 'RET-CODE-1', 'DIST-CODE-2', 'CODE-5', 'DSR-1', 150, 1458, 465, 'PARACHUTE', 52, 'GROUND');
+INSERT INTO SALES(sales_date, retailer_code, distributor_code, product_code, dsr_id, sales_qty, tax1_amt, tax2_amt, brand, net_weight, channel) 
+		  VALUES('05-JAN-2022', 'RET-CODE-1', 'DIST-CODE-2', 'CODE-5', 'DSR-1', 150, 1458, 465, 'PARACHUTE', 66, 'GROUND');
+INSERT INTO SALES(sales_date, retailer_code, distributor_code, product_code, dsr_id, sales_qty, tax1_amt, tax2_amt, brand, net_weight, channel) 
+		  VALUES('30-JAN-2022', 'RET-CODE-1', 'DIST-CODE-2', 'CODE-5', 'DSR-1', 150, 1458, 465, 'PARACHUTE', 98, 'GROUND');
+
+SELECT * FROM SALES;
+
+
+
+--1
+SELECT PRODUCT_CODE, PRODUCT_DESC, SHELF_LIFE_DAYS FROM PRODUCT
+ORDER BY SHELF_LIFE_DAYS DESC;
+
+--2
+SELECT SALES_DATE, RETAILER_CODE, DISTRIBUTOR_CODE, PRODUCT_CODE FROM SALES
+WHERE BRAND = 'PARACHUTE' ORDER BY SALES_DATE ASC
+
+--3
+SELECT COUNT(*) AS COUNT_OF_STORES FROM STORE
+WHERE CITY = 'Bangalore'
+
+--4
+SELECT CITY, COUNT(*) AS COUNT_OF_STORES FROM STORE
+GROUP BY CITY
+
+--5
+SELECT * FROM SALES;
+SELECT * FROM STORE;
+SELECT * FROM PRODUCT;
+
+SELECT S.RETAILER_CODE
+FROM STORE AS S
+WHERE S.RETAILER_CODE = (SELECT SAL.RETAILER_CODE FROM SALES AS SAL)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
